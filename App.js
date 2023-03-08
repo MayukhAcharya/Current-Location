@@ -4,12 +4,9 @@ import * as Location from "expo-location";
 import MapView, { Marker } from "react-native-maps";
 
 export default function App() {
-  const [mapregion, Setmapregion] = useState({
-    latitude: 20.5937,
-    longitude: 78.9629,
-    latitudeDelta: 30,
-    longitudeDelta: 30,
-  });
+  const [mapregion, Setmapregion] = useState({});
+  const [mylatitude, SetmyLatitude] = useState("");
+  const [mylongitude, SetmyLongitude] = useState("");
 
   const Getlocation = async () => {
     let { status } = await Location.requestForegroundPermissionsAsync();
@@ -26,6 +23,8 @@ export default function App() {
       latitudeDelta: 0.000918,
       longitudeDelta: 0.000418,
     });
+    SetmyLatitude(currentLocation.coords.latitude);
+    SetmyLongitude(currentLocation.coords.longitude);
   };
   return (
     <View style={styles.container}>
@@ -33,9 +32,23 @@ export default function App() {
       <MapView
         style={{ height: "50%", width: "100%", margin: 10 }}
         region={mapregion}
+        initialRegion={{
+          latitude: 20.5937,
+          longitude: 78.9629,
+          latitudeDelta: 30,
+          longitudeDelta: 30,
+        }}
       >
-        <Marker coordinate={mapregion} title="Your are here" draggable={true} />
+        {mylatitude && (
+          <Marker
+            coordinate={mapregion}
+            title="Your are here"
+            draggable={true}
+          />
+        )}
       </MapView>
+      <Text>{mylatitude}</Text>
+      <Text>{mylongitude}</Text>
     </View>
   );
 }
